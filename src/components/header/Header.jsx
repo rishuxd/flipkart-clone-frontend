@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import Search from "./Search";
+import LoginDialog from "../login/LoginDialog";
+import { useState } from "react";
 
 const Container = styled.div`
   position: fixed;
@@ -119,6 +121,11 @@ const Cart = styled.div`
 `;
 
 const Header = () => {
+  const [open, setOpen] = useState(false);
+
+  const openDialog = () => {
+    setOpen(true);
+  };
   return (
     <Container>
       <WidthContainer>
@@ -142,7 +149,7 @@ const Header = () => {
         </LogoDiv>
         <Search />
         <LoginButton>
-          <a href="">Login</a>
+          <a onClick={() => openDialog()}>Login</a>
         </LoginButton>
         <BecomeASeller>
           <a href="">Become a Seller</a>
@@ -157,6 +164,7 @@ const Header = () => {
             <span>Cart</span>
           </a>
         </Cart>
+        <LoginDialog open={open} setOpen={setOpen} />
       </WidthContainer>
     </Container>
   );

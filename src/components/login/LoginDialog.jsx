@@ -1,5 +1,176 @@
 import { Dialog } from "@mui/material";
 import styled from "styled-components";
+import { useState, useContext } from "react";
+import { TextField } from "@mui/material";
+import { authenticateSignup } from "../../services/api";
+import { DataContext } from "../../context/DataProvider";
+
+// ------------------------------ CONSTANTS --------------------------------
+
+const accountInitialValues = {
+  login: {
+    view: "login",
+    heading: "Login",
+    subHeading: "Get access to your Orders, Wishlist and Recommendations",
+  },
+  signup: {
+    view: "signup",
+    heading: "Looks like you're new here!",
+    subHeading: "Sign up with your mobile number to get started",
+  },
+};
+
+const signupInitialValues = {
+  firstname: "",
+  lastname: "",
+  username: "",
+  email: "",
+  password: "",
+  phone: "",
+};
+
+// ------------------------------ FUNCTIONS --------------------------------
+
+const LoginDialog = (props) => {
+  const [account, toggleAccount] = useState(accountInitialValues.login);
+  const [signup, setSignup] = useState(signupInitialValues);
+  const { setAccount } = useContext(DataContext);
+
+  const handleClose = () => {
+    props.setOpen(false);
+    toggleAccount(accountInitialValues.login);
+  };
+
+  const toggleSignup = () => {
+    account === accountInitialValues.login
+      ? toggleAccount(accountInitialValues.signup)
+      : toggleAccount(accountInitialValues.login);
+  };
+
+  const onInputChange = (e) => {
+    setSignup({ ...signup, [e.target.name]: e.target.value });
+    console.log(signup);
+  };
+
+  const signupUser = async () => {
+    let response = await authenticateSignup(signup);
+    if (!response) return;
+    handleClose();
+    setAccount(signup.firstname);
+  };
+
+  return (
+    <Dialog open={props.open} onClose={handleClose}>
+      <Container>
+        <Left>
+          <span>{account.heading}</span>
+          <p>{account.subHeading}</p>
+        </Left>
+
+        {account.view === "login" ? (
+          <Right>
+            <TextMargin>
+              <LoginInput
+                id="standard-basic"
+                label="Enter Email/Mobile number"
+                variant="standard"
+              />
+            </TextMargin>
+            <TextMargin>
+              <LoginInput
+                id="standard-basic"
+                label="Enter Email/Mobile number"
+                variant="standard"
+              />
+            </TextMargin>
+            <LoginTerms>
+              By continuing, you agree to Flipkart's
+              <a> Terms of Use </a>
+              and
+              <a> Privacy Policy</a>
+            </LoginTerms>
+            <LoginButton>Login</LoginButton>
+            <RequestOTP>
+              <a>Request OTP</a>
+            </RequestOTP>
+            <NewAccount>
+              <a onClick={() => toggleSignup()}>
+                New to Flipkart? Create an account
+              </a>
+            </NewAccount>
+          </Right>
+        ) : (
+          <Right>
+            <TextMargin>
+              <LoginInput
+                id="standard-basic"
+                label="Enter Firstname"
+                variant="standard"
+                onChange={(e) => onInputChange(e)}
+                name="firstname"
+              />
+            </TextMargin>
+            <TextMargin>
+              <LoginInput
+                id="standard-basic"
+                label="Enter Lastname"
+                variant="standard"
+                onChange={(e) => onInputChange(e)}
+                name="lastname"
+              />
+            </TextMargin>
+            <TextMargin>
+              <LoginInput
+                id="standard-basic"
+                label="Enter Username"
+                variant="standard"
+                onChange={(e) => onInputChange(e)}
+                name="username"
+              />
+            </TextMargin>
+            <TextMargin>
+              <LoginInput
+                id="standard-basic"
+                label="Enter Email"
+                variant="standard"
+                onChange={(e) => onInputChange(e)}
+                name="email"
+              />
+            </TextMargin>
+            <TextMargin>
+              <LoginInput
+                id="standard-basic"
+                label="Enter Password"
+                variant="standard"
+                onChange={(e) => onInputChange(e)}
+                name="password"
+              />
+            </TextMargin>
+            <TextMargin>
+              <LoginInput
+                id="standard-basic"
+                label="Enter Mobile Number"
+                variant="standard"
+                onChange={(e) => onInputChange(e)}
+                name="phone"
+              />
+            </TextMargin>
+            <LoginTerms>
+              By continuing, you agree to Flipkart's
+              <a> Terms of Use </a>
+              and
+              <a> Privacy Policy</a>
+            </LoginTerms>
+            <LoginButton onClick={() => signupUser()}>CONTINUE</LoginButton>
+            <ExistingUser onClick={toggleSignup}>
+              Existing User? Log in
+            </ExistingUser>
+          </Right>
+        )}
+      </Container>
+    </Dialog>
+  );
+};
 
 const Container = styled.div`
   min-width: 400px;
@@ -48,62 +219,12 @@ const Right = styled.div`
   background-color: #fff;
 `;
 
-const LoginInput = styled.div`
-  position: relative;
+const TextMargin = styled.div`
   margin-bottom: 34px;
-  font-size: 16px;
+`;
 
-  input {
-    padding: 8px 10px 10px 0;
-    width: 100%;
-    color: #000;
-    font-size: inherit;
-    border: none;
-    background: #fff;
-    border-bottom: 1px solid #e0e0e0;
-    outline: none;
-  }
-
-  span {
-    position: relative;
-    display: block;
-    width: 100%;
-
-    &::before {
-      left: 50%;
-      transform-origin: left;
-    }
-    &::after {
-      right: 50%;
-      transform-origin: right;
-    }
-    &::after,
-    ::before {
-      content: "";
-      height: 1px;
-      width: 50%;
-      transform: scale(0);
-      bottom: 1px;
-      position: absolute;
-      will-change: transform;
-      background: #2874f0;
-      transition: transform 0.2s ease;
-      transform: scale(1);
-    }
-  }
-
-  label {
-    color: #878787;
-    font-weight: 16px;
-    font-weight: 400;
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: translateY(10px);
-    transition: transform 0.2s ease;
-    transform-origin: left;
-    pointer-events: none;
-  }
+const LoginInput = styled(TextField)`
+  width: 100%;
 `;
 
 const LoginTerms = styled.div`
@@ -117,25 +238,22 @@ const LoginTerms = styled.div`
   }
 `;
 
-const RequestOtp = styled.div`
+const LoginButton = styled.button`
   margin-top: 16px;
-
-  button {
-    background: #fb641b;
-    border: none;
-    color: #fff;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 20%);
-    width: 100%;
-    height: 48px;
-    font-size: 15px;
-    border-radius: 2px;
-    padding: 10px 20px;
-    font-weight: 500;
-    outline: none;
-    cursor: pointer;
-    display: inline-block;
-    transition: box-shadow 0.2s ease;
-  }
+  background: #fb641b;
+  border: none;
+  color: #fff;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 20%);
+  width: 100%;
+  height: 48px;
+  font-size: 15px;
+  border-radius: 2px;
+  padding: 10px 20px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  display: inline-block;
+  transition: box-shadow 0.2s ease;
 `;
 
 const NewAccount = styled.div`
@@ -152,42 +270,21 @@ const NewAccount = styled.div`
   }
 `;
 
-const LoginDialog = (props) => {
-  const handleClose = () => {
-    props.setOpen(false);
-  };
+const RequestOTP = styled.div`
+  text-align: center;
+  margin-top: 14px;
 
-  return (
-    <Dialog open={props.open} onClose={handleClose}>
-      <Container>
-        <Left>
-          <span>Login</span>
-          <p>Get access to Orders, Wishlist and Recommendations</p>
-        </Left>
-        <Right>
-          <form action="">
-            <LoginInput>
-              <input type="text" />
-              <span></span>
-              <label htmlFor="">Enter Email/Mobile Number</label>
-            </LoginInput>
-            <LoginTerms>
-              By continuing, you agree to Flipkart's
-              <a href=""> Terms of Use </a>
-              and
-              <a href=""> Privacy Policy</a>
-            </LoginTerms>
-            <RequestOtp>
-              <button>Request OTP</button>
-            </RequestOtp>
-            <NewAccount>
-              <a href="">New to Flipkart? Create an account</a>
-            </NewAccount>
-          </form>
-        </Right>
-      </Container>
-    </Dialog>
-  );
-};
+  a {
+    font-size: 14px;
+    color: #2874f0;
+    text-decoration: none;
+  }
+`;
+
+const ExistingUser = styled(LoginButton)`
+  color: #2874f0;
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%);
+`;
 
 export default LoginDialog;

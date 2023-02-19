@@ -1,8 +1,68 @@
 import styled from "styled-components";
 import Search from "./Search";
 import LoginDialog from "../login/LoginDialog";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { DataContext } from "../../context/DataProvider";
+import Profile from "./Profile";
 
+const Header = () => {
+  const [open, setOpen] = useState(false);
+  const { account, setAccount } = useContext(DataContext);
+
+  const openDialog = () => {
+    setOpen(true);
+  };
+  return (
+    <Container>
+      <WidthContainer>
+        <LogoDiv>
+          <a>
+            <img
+              width={75}
+              src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
+              alt=""
+            />
+          </a>
+          <a>
+            Explore
+            <span>Plus</span>
+            <img
+              width={10}
+              src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png"
+              alt=""
+            />
+          </a>
+        </LogoDiv>
+        <Search />
+
+        {account ? (
+          <Profile account={account} setAccount={setAccount} />
+        ) : (
+          <LoginButton>
+            <a onClick={() => openDialog()}>Login</a>
+          </LoginButton>
+        )}
+
+        <BecomeASeller>
+          <a>Become a Seller</a>
+        </BecomeASeller>
+        <More>
+          More
+          <img src="\images\more-icon.svg" alt="" />
+        </More>
+        <Cart>
+          <a>
+            <img src="\images\cart-icon.svg" alt="" />
+            <span>Cart</span>
+          </a>
+        </Cart>
+        <LoginDialog open={open} setOpen={setOpen} />
+      </WidthContainer>
+    </Container>
+  );
+};
+
+// ----------------------- CSS --------------------
 const Container = styled.div`
   position: fixed;
   top: 0;
@@ -119,55 +179,5 @@ const Cart = styled.div`
     }
   }
 `;
-
-const Header = () => {
-  const [open, setOpen] = useState(false);
-
-  const openDialog = () => {
-    setOpen(true);
-  };
-  return (
-    <Container>
-      <WidthContainer>
-        <LogoDiv>
-          <a>
-            <img
-              width={75}
-              src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
-              alt=""
-            />
-          </a>
-          <a>
-            Explore
-            <span>Plus</span>
-            <img
-              width={10}
-              src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png"
-              alt=""
-            />
-          </a>
-        </LogoDiv>
-        <Search />
-        <LoginButton>
-          <a onClick={() => openDialog()}>Login</a>
-        </LoginButton>
-        <BecomeASeller>
-          <a href="">Become a Seller</a>
-        </BecomeASeller>
-        <More>
-          More
-          <img src="\images\more-icon.svg" alt="" />
-        </More>
-        <Cart>
-          <a href="">
-            <img src="\images\cart-icon.svg" alt="" />
-            <span>Cart</span>
-          </a>
-        </Cart>
-        <LoginDialog open={open} setOpen={setOpen} />
-      </WidthContainer>
-    </Container>
-  );
-};
 
 export default Header;

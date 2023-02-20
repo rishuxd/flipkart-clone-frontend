@@ -2,7 +2,7 @@ import { Dialog } from "@mui/material";
 import styled from "styled-components";
 import { useState, useContext } from "react";
 import { TextField } from "@mui/material";
-import { authenticateSignup } from "../../services/api";
+import { authenticateSignup, authenticateLogin } from "../../services/api";
 import { DataContext } from "../../context/DataProvider";
 
 // ------------------------------ CONSTANTS --------------------------------
@@ -29,16 +29,23 @@ const signupInitialValues = {
   phone: "",
 };
 
+const loginInitialValues = {
+  username: "",
+  password: "",
+};
 // ------------------------------ FUNCTIONS --------------------------------
 
 const LoginDialog = (props) => {
   const [account, toggleAccount] = useState(accountInitialValues.login);
   const [signup, setSignup] = useState(signupInitialValues);
   const { setAccount } = useContext(DataContext);
+  const [login, setLogin] = useState(loginInitialValues);
+  const [loginError, setLoginError] = useState(false);
 
   const handleClose = () => {
     props.setOpen(false);
     toggleAccount(accountInitialValues.login);
+    setLoginError(false);
   };
 
   const toggleSignup = () => {
@@ -59,6 +66,20 @@ const LoginDialog = (props) => {
     setAccount(signup.firstname);
   };
 
+  const onValueChange = (e) => {
+    setLogin({ ...login, [e.target.name]: e.target.value });
+  };
+
+  const loginUser = async () => {
+    let response = await authenticateLogin(login);
+    if (response.status === 200) {
+      handleClose();
+      setAccount(response.data.data.firstname);
+    } else {
+      setLoginError(true);
+    }
+  };
+
   return (
     <Dialog open={props.open} onClose={handleClose}>
       <Container>
@@ -72,24 +93,31 @@ const LoginDialog = (props) => {
             <TextMargin>
               <LoginInput
                 id="standard-basic"
-                label="Enter Email/Mobile number"
+                label="Enter Username"
+                onChange={(e) => onValueChange(e)}
+                name="username"
                 variant="standard"
               />
             </TextMargin>
             <TextMargin>
               <LoginInput
                 id="standard-basic"
-                label="Enter Email/Mobile number"
+                label="Enter Password"
+                onChange={(e) => onValueChange(e)}
+                name="password"
                 variant="standard"
               />
             </TextMargin>
+            {loginError && (
+              <LoginError>Please enter valid username or password !</LoginError>
+            )}
             <LoginTerms>
               By continuing, you agree to Flipkart's
               <a> Terms of Use </a>
               and
               <a> Privacy Policy</a>
             </LoginTerms>
-            <LoginButton>Login</LoginButton>
+            <LoginButton onClick={() => loginUser()}>Login</LoginButton>
             <RequestOTP>
               <a>Request OTP</a>
             </RequestOTP>
@@ -236,6 +264,13 @@ const LoginTerms = styled.div`
     color: #2874f0;
     text-decoration: none;
   }
+`;
+
+const LoginError = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  color: #ff6161;
+  margin-bottom: 10px;
 `;
 
 const LoginButton = styled.button`

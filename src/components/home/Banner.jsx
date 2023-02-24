@@ -25,22 +25,29 @@ const Image = styled.img`
 
 const Banner = () => {
   return (
-    <Carousel
-      infinite={true}
-      responsive={responsive}
-      swipeable={false}
-      draggable={false}
-      autoPlay={true}
-      autoPlaySpeed={4000}
-      dotListClass="custom-dot-list-style"
-      itemClass="carousel-item-padding-40-px"
-      containerClass="carousel-container"
-    >
-      {bannerData.map((data) => (
-        <Image src={data.url} alt="" />
-      ))}
-    </Carousel>
+    <Box>
+      <Carousel
+        infinite={true}
+        responsive={responsive}
+        swipeable={false}
+        draggable={false}
+        autoPlay={true}
+        autoPlaySpeed={4000}
+        dotListClass="custom-dot-list-style"
+        itemClass="carousel-item-padding-40-px"
+        containerClass="carousel-container"
+      >
+        {bannerData.map((data) => (
+          <Image src={data.url} alt="" />
+        ))}
+      </Carousel>
+    </Box>
   );
 };
+
+const Box = styled.div`
+  padding: 10px 10px;
+  background-color: #f2f2f2;
+`;
 
 export default Banner;

@@ -24,7 +24,10 @@ const Home = () => {
     <Container>
       <NavBar />
       <Banner />
-      <Slide products={products} />
+      <Slide products={products} title="Top Offers" />
+      <Slide products={products} title="Todays's Fashion Deals" />
+      <Slide products={products} title="Bestsellers On Fashion" />
+      <Slide products={products} title="Women's Day Specials" />
     </Container>
   );
 };

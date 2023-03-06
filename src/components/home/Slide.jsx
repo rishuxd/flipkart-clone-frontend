@@ -1,57 +1,45 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import styled from "styled-components";
-import Countdown from "react-countdown";
 
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
-    items: 5,
+    items: 6,
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
-    items: 2,
+    items: 3,
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
-    items: 1,
+    items: 2,
   },
 };
 
 const Slide = (props) => {
-  const renderer = ({ hours, minutes, seconds }) => {
-    return (
-      <span>
-        {hours}:{minutes}:{seconds} Left
-      </span>
-    );
-  };
-
   return (
     <Container>
-      <SlideHeader>
-        <span>Deal of the Day</span>
-        <div>
-          <img
-            src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/timer_a73398.svg"
-            alt="timer"
-          />
-          <Countdown date={Date.now() + 5.04e7} renderer={renderer} />
-        </div>
-      </SlideHeader>
+      <Left>
+        <h2>{props.title}</h2>
+        <a href="">VIEW ALL</a>
+      </Left>
       <Carousel
         responsive={responsive}
-        infinite={true}
         swipeable={false}
         draggable={false}
-        centerMode={true}
         keyBoardControl={true}
         dotListClass="custom-dot-list-style"
         itemClass="carousel-item-padding-40-px"
         containerClass="carousel-container"
       >
         {props.products.map((product) => (
-          <img src={product.url} alt="" />
+          <Box>
+            <Image src={product.url} alt="" />
+            <p>{product.title.shortTitle}</p>
+            <p>{product.discount}</p>
+            <p>{product.tagline}</p>
+          </Box>
         ))}
       </Carousel>
     </Container>
@@ -59,31 +47,65 @@ const Slide = (props) => {
 };
 
 const Container = styled.div`
-  padding: 10px 10px;
+  display: flex;
   background-color: #fff;
+  border: 1px solid #eaeaea;
+  margin: 0 10px;
+  margin-bottom: 10px;
 `;
 
-const SlideHeader = styled.div`
-  padding: 15px 20px;
-  display: flex;
+const Left = styled.div`
+  background-color: #2874;
+  width: 250px;
+  text-align: center;
+  padding: 28px 10px 124px;
 
-  span {
-    font-size: 22px;
-    font-weight: 600;
-    margin-right: 25px;
-    line-height: 32px;
+  h2 {
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.38;
+    margin-bottom: 24px;
   }
 
-  div {
-    display: flex;
-    margin-left: 10px;
-    align-items: center;
-    color: #7f7f7f;
+  a {
+    background: #2874f0;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 2px;
+    padding: 10px 20px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px 0 rgba(0 0 0 / 20%);
+    text-decoration: none;
+    cursor: pointer;
+  }
+`;
 
-    img {
-      width: 24px;
+const Box = styled.div`
+  /* padding: 25px 15px; */
+  text-align: center;
+
+  p {
+    font-size: 14px;
+    padding-top: 5px;
+
+    &:nth-child(2) {
+      font-weight: 600;
+      color: #212121;
+    }
+
+    &:nth-child(3) {
+      color: green;
+    }
+    &:nth-child(4) {
+      color: #212121;
+      opacity: 0.6;
     }
   }
+`;
+
+const Image = styled.img`
+  width: auto;
+  height: 150px;
 `;
 
 export default Slide;

@@ -5,6 +5,7 @@ import Slide from "./Slide";
 import { useEffect } from "react";
 import { getProducts } from "../../redux/actions/productAction";
 import { useDispatch, useSelector } from "react-redux";
+import MidSlide from "./MidSlide";
 
 const Container = styled.div`
   margin-top: 56px;
@@ -26,6 +27,7 @@ const Home = () => {
       <Banner />
       <Slide products={products} title="Top Offers" />
       <Slide products={products} title="Todays's Fashion Deals" />
+      <MidSlide />
       <Slide products={products} title="Bestsellers On Fashion" />
       <Slide products={products} title="Women's Day Specials" />
     </Container>

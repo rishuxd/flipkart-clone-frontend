@@ -1,6 +1,6 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import styled from "styled-components";
+import { Box, styled } from "@mui/material";
 import { bannerData } from "../../constants/data";
 
 const responsive = {
@@ -18,14 +18,18 @@ const responsive = {
   },
 };
 
-const Image = styled.img`
-  width: 100%;
-  height: 280px;
-`;
+const Image = styled("img")(({ theme }) => ({
+  width: "100%",
+  height: 280,
+  [theme.breakpoints.down("md")]: {
+    objectFit: "cover",
+    height: 180,
+  },
+}));
 
 const Banner = () => {
   return (
-    <Box>
+    <Container>
       <Carousel
         infinite={true}
         responsive={responsive}
@@ -41,11 +45,11 @@ const Banner = () => {
           <Image src={data.url} alt="" />
         ))}
       </Carousel>
-    </Box>
+    </Container>
   );
 };
 
-const Box = styled.div`
+const Container = styled(Box)`
   padding: 10px 10px;
   background-color: #f2f2f2;
 `;

@@ -4,6 +4,7 @@ import LoginDialog from "../login/LoginDialog";
 import { useState, useContext } from "react";
 import { DataContext } from "../../context/DataProvider";
 import Profile from "./Profile";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -15,24 +16,29 @@ const Header = () => {
   return (
     <Container>
       <WidthContainer>
-        <LogoDiv>
-          <a>
-            <img
-              width={75}
-              src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
-              alt=""
-            />
-          </a>
-          <a>
-            Explore
-            <span>Plus</span>
-            <img
-              width={10}
-              src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png"
-              alt=""
-            />
-          </a>
-        </LogoDiv>
+        <Link
+          to="/"
+          style={{ textDecoration: "none", display: "flex", color: "#fff" }}
+        >
+          <LogoDiv>
+            <a>
+              <img
+                width={75}
+                src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png"
+                alt=""
+              />
+            </a>
+            <a>
+              Explore
+              <span>Plus</span>
+              <img
+                width={10}
+                src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png"
+                alt=""
+              />
+            </a>
+          </LogoDiv>
+        </Link>
         <Search />
 
         {account ? (

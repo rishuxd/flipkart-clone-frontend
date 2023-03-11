@@ -1,6 +1,7 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const responsive = {
   desktop: {
@@ -34,12 +35,14 @@ const Slide = (props) => {
         containerClass="carousel-container"
       >
         {props.products.map((product) => (
-          <Box>
-            <Image src={product.url} alt="" />
-            <p>{product.title.shortTitle}</p>
-            <p>{product.discount}</p>
-            <p>{product.tagline}</p>
-          </Box>
+          <Link to={`product/${product.id}`} style={{ textDecoration: "none" }}>
+            <Box>
+              <Image src={product.url} alt="" />
+              <p>{product.title.shortTitle}</p>
+              <p>{product.discount}</p>
+              <p>{product.tagline}</p>
+            </Box>
+          </Link>
         ))}
       </Carousel>
     </Container>
@@ -81,7 +84,6 @@ const Left = styled.div`
 `;
 
 const Box = styled.div`
-  /* padding: 25px 15px; */
   text-align: center;
 
   p {

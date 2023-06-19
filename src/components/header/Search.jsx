@@ -1,64 +1,90 @@
-import styled from "styled-components";
+import { useState, useEffect } from "react";
 
-const SearchBox = styled.div`
+import SearchIcon from "@mui/icons-material/Search";
+import { InputBase, List, ListItem, Box, styled } from "@mui/material";
+
+import { useSelector, useDispatch } from "react-redux"; // hooks
+import { getProducts as listProducts } from "../../redux/actions/productAction";
+import { Link } from "react-router-dom";
+
+const SearchContainer = styled(Box)`
+  border-radius: 2px;
+  margin-left: 10px;
+  width: 38%;
+  background-color: #fff;
+  height: 80%;
   display: flex;
-  height: 100%;
-  min-width: 304px;
-  width: calc(100% - 540px);
-  margin: 0 auto 0 12px;
-  justify-content: flex-start;
+  margin-top: 5px;
+`;
+
+const SearchIconWrapper = styled(Box)`
+  margin-left: auto;
+  padding: 5px;
+  display: flex;
   align-items: center;
+  color: blue;
+`;
 
-  form {
-    display: inline-block;
-    width: 100%;
-    height: 36px;
-    max-width: 564px;
-    position: relative;
+const ListWrapper = styled(List)`
+  position: absolute;
+  color: #000;
+  background: #ffffff;
+  margin-top: 36px;
+`;
 
-    div {
-      display: flex;
-      justify-content: space-between;
-      border-radius: 2px;
-      background-color: #fff;
-
-      input {
-        padding: 0 16px;
-        border-radius: 2px 0 0 2px;
-        border: 0;
-        font-size: 14px;
-        height: 36px;
-        width: 100%;
-        outline: none;
-      }
-      button {
-        height: 36px;
-        width: 44px;
-        border-radius: 2px;
-        cursor: pointer;
-        padding: 4px 12px 0 8px;
-        border: none;
-        background-color: #fff;
-      }
-    }
-  }
+const InputSearchBase = styled(InputBase)`
+  font-size: unset;
+  width: 100%;
+  padding-left: 20px;
 `;
 
 const Search = () => {
+  const [text, setText] = useState();
+
+  const getText = (text) => {
+    setText(text);
+  };
+
+  const getProducts = useSelector((state) => state.getProducts);
+  const { products } = getProducts;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(listProducts());
+  }, [dispatch]);
+
   return (
-    <SearchBox>
-      <form action="">
-        <div>
-          <input
-            type="text"
-            placeholder="Search for products, brands and more"
-          />
-          <button>
-            <img src="\images\search-icon.svg" alt="" />
-          </button>
-        </div>
-      </form>
-    </SearchBox>
+    <SearchContainer>
+      <InputSearchBase
+        placeholder="Search for products, brands and more"
+        inputProps={{ "aria-label": "search" }}
+        onChange={(e) => getText(e.target.value)}
+        value={text}
+      />
+      <SearchIconWrapper>
+        <SearchIcon />
+      </SearchIconWrapper>
+      {text && (
+        <ListWrapper>
+          {products
+            .filter((product) =>
+              product.title.longTitle.toLowerCase().includes(text.toLowerCase())
+            )
+            .map((product) => (
+              <ListItem>
+                <Link
+                  to={`/product/${product.id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                  onClick={() => setText("")}
+                >
+                  {product.title.longTitle}
+                </Link>
+              </ListItem>
+            ))}
+        </ListWrapper>
+      )}
+    </SearchContainer>
   );
 };
 

@@ -69,6 +69,7 @@ const Header = () => {
 };
 
 // ----------------------- CSS --------------------
+
 const Container = styled.div`
   position: fixed;
   top: 0;

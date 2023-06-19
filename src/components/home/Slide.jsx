@@ -50,7 +50,7 @@ const Slide = (props) => {
 };
 
 const Container = styled.div`
-  display: flex;
+  // display: flex;
   background-color: #fff;
   border: 1px solid #eaeaea;
   margin: 0 10px;
